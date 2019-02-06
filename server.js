@@ -68,3 +68,10 @@ console.log("server is up on port 3000");
 });// it can take a 2nd arg.. its optional..its fn.. it let us do sth when the server is up;
 // get expect two argument 1st url... in our case the root... 
 //2nd is function for sendening res back...and it has two arg
+
+
+
+
+//middleware----------1. If a middleware sends a response back to the client, it doesn't need to call next.
+//1. If a middleware sends a response back to the client, it doesn't need to call next.
+//2. If a middleware only modifies a request, then it must call next so that the request is passed along to the next middleware/router handler.
