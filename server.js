@@ -22,13 +22,22 @@ hbs.registerHelper("screamIt",(text)=>{
 //app.use(express.static(__dirname+"/public"))// .use is used to add middleware
 //client : app,brower, i phone or any
 app.use((req,res,next)=>{
-    
+
     var now=new Date().toString();
-    console.log(`${now} : ${req.method} ${req.url}`);
+    let log= `${now} : ${req.method} ${req.url}`;
+    console.log(log);
+    fs.appendFile('server.log',log+'\n',(err)=>{
+        if(err)
+        console.log("unable to append to the srver.log");
+    });
     next();// it is to tell express that we done with other works
 // if we dont use next().. req will never get fired...
 })// .use takes one fn
 
+
+app.use((req,res,next)=>{
+    res.render("mainetance.hbs");
+})
 app.get('/',(req,res)=>{
  
 
@@ -38,7 +47,7 @@ res.render('home.hbs',{
     welcomeMsg:"Welcome  to Home Page"
 })
 });
-
+// if we dont call next the .get will never get executed
 app.get('/about',(req,res)=>{
     res.render('about.hbs',{
         pageTitle:'About page'
