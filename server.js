@@ -1,5 +1,5 @@
 const express=require('express');
-
+const fs=require("fs")
 // views is the default dir express use
 
 var app=express();
@@ -19,8 +19,20 @@ hbs.registerHelper("screamIt",(text)=>{
 //app.set('views', 'someOtherFolder') to set deafult dir to some other folder
 
 
+//app.use(express.static(__dirname+"/public"))// .use is used to add middleware
+//client : app,brower, i phone or any
+app.use((req,res,next)=>{
+    
+    var now=new Date().toString();
+    console.log(`${now} : ${req.method} ${req.url}`);
+    next();// it is to tell express that we done with other works
+// if we dont use next().. req will never get fired...
+})// .use takes one fn
+
 app.get('/',(req,res)=>{
  
+
+
 res.render('home.hbs',{
     pageTitle:"Home Page",
     welcomeMsg:"Welcome  to Home Page"
