@@ -18,8 +18,12 @@ hbs.registerHelper("screamIt",(text)=>{
 
 //app.set('views', 'someOtherFolder') to set deafult dir to some other folder
 
+app.use((req,res,next)=>{
+    res.render("maintenance.hbs");
+})
+// middleware gets called in the order they are defined.. 1st 2nd 3rd
 
-//app.use(express.static(__dirname+"/public"))// .use is used to add middleware
+app.use(express.static(__dirname+"/public"))// .use is used to add middleware
 //client : app,brower, i phone or any
 app.use((req,res,next)=>{
 
@@ -35,9 +39,7 @@ app.use((req,res,next)=>{
 })// .use takes one fn
 
 
-app.use((req,res,next)=>{
-    res.render("mainetance.hbs");
-})
+
 app.get('/',(req,res)=>{
  
 
