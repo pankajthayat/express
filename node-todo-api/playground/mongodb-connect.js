@@ -1,5 +1,5 @@
 // mongo client lets us connect to mongo server
-
+const assert=require('assert'); // what is assert
 const MongoClient=require("mongodb").MongoClient;// pull off mongo client from mongodb lib
 //  no need to create before using it like others..just give name u want.. mongo will not create db until we start using
 const client=new MongoClient('mongodb://localhost:27017');
