@@ -15,19 +15,27 @@ app.set("view engine",'hbs');
 app.get('/',(req,res)=>{
    // res.send("hello express");
   // res.send("<h1>hello express</h1>");
-  res.send({
-      name:"pankaj",
-      likes:[
-          'biking',
-          'cities'
-      ]
-  })
+//   res.send({
+//       name:"pankaj",
+//       likes:[
+//           'biking',
+//           'cities'
+//       ]
+//   })
+res.render('home.hbs',{
+    pageTitle:"Home Page",
+    welcomeMsg:"Welcome  to Home Page",
+    currentYear:new Date().getFullYear()
+})
 });
 
 app.get('/about',(req,res)=>{
-    res.render('about.hbs');
+    res.render('about.hbs',{
+        pageTitle:'About page',
+        currentYear:new Date().getFullYear()
+    });
 })
-
+// for passing the props..to make the template dynamic
 app.get('/bad',(req,res)=>{
     //res.send("error");
     res.status(400).send("error")
