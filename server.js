@@ -4,35 +4,32 @@ const express=require('express');
 
 var app=express();
 const hbs=require("hbs");// handlebar
-//app.use(express.static(__dirname+"/public")); // to add middleware....app.use take the mw function 
-//How did render know where to get the html file
-//That is Express' default behavior when it comes to res.render(). It'll look for a folder called 'views'. You can change it via:
 
 app.set("view engine",'hbs');
+hbs.registerPartials(__dirname+"/views/partials");// dir name for partials
 
-//app.set('views', 'someOtherFolder')
+hbs.registerHelper('getCurrentYear',()=>{
+    return new Date().getFullYear();
+})// so that we dont have to call same fn again and again
+
+hbs.registerHelper("screamIt",(text)=>{
+    return text.toUpperCase(text);
+})// we can even set a fn that takes args
+
+//app.set('views', 'someOtherFolder') to set deafult dir to some other folder
+
 
 app.get('/',(req,res)=>{
-   // res.send("hello express");
-  // res.send("<h1>hello express</h1>");
-//   res.send({
-//       name:"pankaj",
-//       likes:[
-//           'biking',
-//           'cities'
-//       ]
-//   })
+ 
 res.render('home.hbs',{
     pageTitle:"Home Page",
-    welcomeMsg:"Welcome  to Home Page",
-    currentYear:new Date().getFullYear()
+    welcomeMsg:"Welcome  to Home Page"
 })
 });
 
 app.get('/about',(req,res)=>{
     res.render('about.hbs',{
-        pageTitle:'About page',
-        currentYear:new Date().getFullYear()
+        pageTitle:'About page'
     });
 })
 // for passing the props..to make the template dynamic

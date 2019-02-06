@@ -5,11 +5,9 @@
     <title>Home Website</title>
   </head>
   <body>
-    <h1>{{pageTitle}}</h1>
-    <p>Some text here</p>
-     <p>{{welcomeMsg}}</p>
-    <footer>
-      <p>Copyright {{currentYear}}</p>
-    </footer>
+   {{> header}}
+    
+     <p>{{screamIt welcomeMsg}}</p><!here we pass the args by space sepration!>
+      {{> footer}}
   </body>
 </html>
