@@ -9,16 +9,18 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,client)=>{
     console.log("connected to mongodb server");
     const db=client.db("TodoApp");
     db.collection("Users").insertOne({
-        _id:123,
         name:"pankaj",
         place:"bangalore"
     },(err,result)=>{
         if(err){
                     return console.log("unable to insert into user",err);
                 }
-                console.log(JSON.stringify(result.ops,undefined,2));
-    })
+               // console.log(JSON.stringify(result.ops,undefined,2));
+               console.log(JSON.stringify((result.ops[0]._id.getTimeStamp()),undefined,2));
+            })
     //we can give our own id as well in mongob
 
     client.close();
 });// takes 2 string.. url where db lives.. in prod aws,heroku...here its local, 2nd arg is callback fn
+// id is made up of parts _of_four_values....timestamp,s,process and 3 byte no. lik
+//so there is no need of created at ...we can access time stamp by id
