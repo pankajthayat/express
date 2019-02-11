@@ -1,11 +1,15 @@
 const { mongoose } =require("./../server/db/mongoose")
 const { Todo }=require("./../server/models/todo");
+const {ObjectID}=require("mongodb");
 
 var id='5c617366059e1710d8837352';
 
 //var id='5c617366059e1710d8837352'; if our id doest present in collection we will get null.. 
 // if our id has wrong format (like add new string at the back) we will get error....so catch this error or use ObjectId.. and check if the id is valid
 
+if(!ObjectID.isValid(id)){
+    console.log("ID is not valid");
+}
 
 Todo.find({
     _id:id
@@ -17,5 +21,5 @@ Todo.findOne({
     _id:id  
 }).then((todo)=>{
     console.log("Todo ",todo);
-})
+}).catch((e)=>{console.log(e)})
 
