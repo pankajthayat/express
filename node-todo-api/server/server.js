@@ -1,29 +1,26 @@
-var mongoose=require('mongoose');
+var express=require('express');
+var bodyparser=require("body-parser");
 
-mongoose.Promise==global.Promise; // to tell mongoose use built in promise as opposed to 3r party..
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+var {mongoose }=require('./db/mongoose');
+var {Todo}=require("./models/todo");
+var {User}=require("./models/user");
 
-var Todo=mongoose.model('Todo',{
-text:{
-type:String
-},
-completed:{
-type:Boolean
-},
-completedAt:{
-type:Number
-}
+var app=express();
+
+app.use(bodyparser.json());// bodyparser.json() return a fn that we need to send... that converts json to obj
+
+app.post('/todos',(req,res)=>{
+    // console.log(req.body)
+    var todo=new Todo({
+        text:req.body.text
+    });
+    todo.save().then((doc)=>{
+        res.send(doc);
+    },(e)=>{
+        res.status(400).send(e);
+    });
 });
-// takes 2 args...1st name, 2nd object: define varios properties for a model
-//todo model..creating.mongose model so that mongoose know how to store our data
 
-var newTodo=new Todo({
-    text:"Cook dinner"
-});// constr.. fn ...expept arg but we can or not
-
-
-newTodo.save().then((doc)=>{
-console.log("Saved todo ",doc);
-},(e)=>{
-    console.log("unable to save");
-});
+app.listen(3000, ()=>{
+    console.log("started on port 3000")
+})
