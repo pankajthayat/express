@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 const { ObjectID }=require('mongodb');
-
+const _=require('lodash');
 var { mongoose } = require('./db/mongoose');
 var { Todo } = require('./models/todo');
 var { User } = require('./models/user');
@@ -76,6 +76,17 @@ app.delete('/todos/:id',(req,res)=>{
    }).catch((e)=>{
        res.status(400).send();
    })
+})
+
+
+app.patch('./todos/:id',(req,res)=>{
+    var id=req.params.id;
+   
+   if(!ObjectID.isValid(id))
+   {
+       return res.status(400).send("invalid id");
+   }
+   
 })
 
 
