@@ -31,6 +31,12 @@ app.get("/todos",(req,res)=>{
 })
 
 
+app.get("/todos/:id",(req,res)=>{
+    var id=req.params.id
+    
+   // res.send(req.params);
+})
+
 app.listen(3000, ()=>{
     console.log("started on port 3000")
 })

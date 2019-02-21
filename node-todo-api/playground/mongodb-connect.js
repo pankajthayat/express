@@ -9,14 +9,15 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,client)=>{
     console.log("connected to mongodb server");
     const db=client.db("TodoApp");
     db.collection("Users").insertOne({
+        // _id:235, if we dont specify the id the system will genrate a new one...which conatin many things ...1. time stamp
         name:"pankaj",
         place:"bangalore"
     },(err,result)=>{
         if(err){
                     return console.log("unable to insert into user",err);
                 }
-               // console.log(JSON.stringify(result.ops,undefined,2));
-               console.log(JSON.stringify((result.ops[0]._id.getTimeStamp()),undefined,2));
+               console.log(JSON.stringify(result.ops,undefined,2));
+               //console.log(JSON.stringify((result.ops[0]._id.getTimeStamp()),undefined,2));
             })
     //we can give our own id as well in mongob
 

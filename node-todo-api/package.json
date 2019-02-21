@@ -11,12 +11,15 @@
   "dependencies": {
     "assert": "^1.4.1",
     "body-parser": "^1.18.3",
+    "crypto-js": "^3.1.9-1",
     "expect": "^24.1.0",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
     "mocha": "^5.2.0",
     "mongodb": "^3.1.13",
     "mongoose": "^5.4.10",
     "nodemon": "^1.18.10",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "validator": "^10.11.0"
   }
 }
