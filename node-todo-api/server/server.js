@@ -9,26 +9,31 @@ mongoose.connect('mongodb://localhost:27017/TodoApp');
 
 var Todo=mongoose.model('Todo',{
     text:{
-        type:String
+        type:String,
+        required:true,
+        minlength:1,
+        trim:true
     },
     //specify details about attributes inside object
     completed:{
-        type:Boolean
+        type:Boolean,
+        default:true
     },
     completedAt:{
-        type:Number
+        type:Number,
+        default:null
     }
 })// 1st name of model...2nd properties
 
 var newTodo=new Todo({
-    text:'cook dinner'
+    text:"edit video" // if text= number..then pass..mongoose typecast..but if text==obj..then error
 });
 // if we see db..it auto craete a collection if doesnot find a one...it auto lowercase and pluralise the namme
 //Todo will become todos
 newTodo.save().then((doc)=>{
     console.log("saved Todo : ",doc); //  __v comes from mongoose.. its version ..it keeps track of varios model change
 },(e)=>{
-    console.log("unable to save")
+    console.log("unable to save : ",e)
 });
 
 
