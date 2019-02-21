@@ -1,12 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-
+const { ObjectID }=require('mongodb');
 
 var { mongoose } = require('./db/mongoose');
 var { Todo } = require('./models/todo');
 var { User } = require('./models/user');
 
 var app = express();
+
+const port=process.env.PORT||3000;
+
+
 app.use(bodyParser.json());//midllware=>return value of this method is middl.. here
 app.post('/todos', (req, res) => {
     var todo = new Todo({
@@ -34,10 +38,53 @@ app.get('/todos',(req,res) => {
 });
 
 
+app.get("/todos/:id",(req,res)=>{
+   // req.params
+   var id=req.params.id;
+   
+   if(!ObjectID.isValid(id))
+   {
+       return res.status(404).send("invalid id");
+   }
+    Todo.findById(id).then((todo)=>{
+        if(!todo)
+        {
+            return res.status(400).send("id does not exist id");
+        }
+        return res.send(todo)
+
+    },(e)=>{
+        console.log("error : ",e);
+        return res.status(400).send("error");
+    }).catch((e)=>{
+        return res.status(400).send("error");
+    })
+})
+
+
+app.delete('/todos/:id',(req,res)=>{
+    var id=req.params.id;
+   
+   if(!ObjectID.isValid(id))
+   {
+       return res.status(400).send("invalid id");
+   }
+   Todo.findByIdAndRemove(id).then((todo)=>{
+       if(!todo)
+       return res.status(400).send();
+       return res.send(todo);
+   }).catch((e)=>{
+       res.status(400).send();
+   })
+})
 
 
 
-
- app.listen(3000,()=>{
-     console.log('started on port 3000');
+ app.listen(port,()=>{
+     console.log(`started on port ${3000}`);
  })
+
+
+
+ //we need to tell heroku how to start the app..start script
+ // also we nedd to tell which version of node to use..default is v5... we are using v6 ... let it know ...
