@@ -8,14 +8,17 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,client)=>{
     }
     console.log("connected to mongodb server");
     const db=client.db("TodoApp");
-    db.collection('todos').find({
-        _id: new ObjectID('5c617366059e1710d8837352')
-    }).toArray().then((docs)=>{
+    db.collection('todos').find().count().then((count)=>{
         console.log("Todos");
-        console.log(JSON.stringify(docs,undefined,2));
+        console.log(`total count : ${count}`);
     },(err)=>{
         console.log("error : ",err)
     });
 
     //client.close();
 });
+
+
+// count and toArray are just method in mongoose
+
+/// in docs there is a callback for count...but we can provide a promise too.

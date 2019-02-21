@@ -11,13 +11,13 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,client)=>{
     // db.collection('Todos').deleteMany({text:"Eat Lunch"}).then((result)=>{
     //     console.log(result);
     // });
-    // db.collection("Todos").deleteOne({text:"Eat Lunch"}).then((result)=>{
-    //     console.log(result);
-    // })
+    db.collection("todos").deleteOne({text:"Eat lunch"}).then((result)=>{
+        console.log(result);
+    })
 
     // db.collection("Todos").findOneAndDelete({completed:false}).then((r)=>{
     //     console.log(r);
 
     // })
-   // client.close();// commenting bcz it would interfere with the code above
+  // client.close();// commenting bcz it would interfere with the code above
 });

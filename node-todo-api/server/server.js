@@ -1,42 +1,37 @@
-var express=require('express');
-var bodyparser=require("body-parser");
-
 var {mongoose }=require('./db/mongoose');
-var {Todo}=require("./models/todo");
-var {User}=require("./models/user");
+mongoose.Promise=global.Promise;
+// we are telling mongoose we use built in promise
+//mongoose support callback by defalt ..but we will use propmise
 
-var app=express();
+mongoose.connect('mongodb://localhost:27017/TodoApp');
+// after connect create model ... by using model more orgernise..
+// in mongodb inside collection we can have anything as we saw in mongobd native in playground...but mondoose keep things more orgernised by creating model
 
-app.use(bodyparser.json());// bodyparser.json() return a fn that we need to send... that converts json to obj
+var Todo=mongoose.model('Todo',{
+    text:{
+        type:String
+    },
+    //specify details about attributes inside object
+    completed:{
+        type:Boolean
+    },
+    completedAt:{
+        type:Number
+    }
+})// 1st name of model...2nd properties
 
-app.post('/todos',(req,res)=>{
-    // console.log(req.body)
-    var todo=new Todo({
-        text:req.body.text
-    });
-    todo.save().then((doc)=>{
-        res.send(doc);
-    },(e)=>{
-        res.status(400).send(e);
-    });
+var newTodo=new Todo({
+    text:'cook dinner'
+});
+// if we see db..it auto craete a collection if doesnot find a one...it auto lowercase and pluralise the namme
+//Todo will become todos
+newTodo.save().then((doc)=>{
+    console.log("saved Todo : ",doc); //  __v comes from mongoose.. its version ..it keeps track of varios model change
+},(e)=>{
+    console.log("unable to save")
 });
 
-app.get("/todos",(req,res)=>{
-    Todo.find().then((todos)=>{
-        res.send({todos}) // we are wrapping todo arrya in object so that we can send more data in future
 
-    },(e)=>{
-        res.status(400).send(e);
-    })
-})
-
-
-app.get("/todos/:id",(req,res)=>{
-    var id=req.params.id
-    
-   // res.send(req.params);
-})
-
-app.listen(3000, ()=>{
-    console.log("started on port 3000")
-})
+// app.listen(3000, ()=>{
+//     console.log("started on port 3000")
+// })
