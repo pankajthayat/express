@@ -39,12 +39,31 @@ UserSchema.methods.toJSON = function (){
   var userObject=user.toObject();
   return _.pick(userObject,['_id','email'])
 }
+// Hey David,
+
+// Great question. It's automatically called when we respond to the express request with res.send. That converts our object to a string by calling JSON.stringify. JSON.stringify is what calls toJSON. Here's an isolated example: 
+
+// var obj = {
+//   publicKey: 'Andrew',
+//   privateKey: 'mypass'
+// };
+ 
+// obj.toJSON = function () {
+//   return {
+//     publicKey: this.publicKey
+//   };
+// };
+ 
+// console.log(JSON.stringify(obj)); // This output will only include the publicKey
+// - Andrew
 
 UserSchema.methods.generateAuthToken=function (){
   var user=this;
   var access='auth';
   var token=jwt.sign({_id:user._id.toHexString(),access},'abc123').toString();
-    //1st obj we want to sign, 2nd secret
+  // toString is a method available to all objects in JavaScript natively. They just overrode its behavior so the can't control the output to something that is compatible with what the library expects.
+  // refer mongoose docs 
+  //1st obj we want to sign, 2nd secret
   //user.tokens.push({access,token});
   user.tokens=user.tokens.concat([{access,token}]);
   return user.save().then(()=>{
@@ -63,6 +82,28 @@ var User = mongoose.model('User', UserSchema);
 module.exports = {User}
 
 
+
+// Adam — Teaching Assistant · 3 days ago
+// Hi Ruesi,
+
+// Sure, that works. Returning in a .then() method allows you to chain another .then() onto it and access the return value so instead of nesting Promises like you are here:
+
+// user.save()
+//     .then(() => {
+//         user.generateAuthToken() //drop return and call the function
+//             .then((token) => {
+//                 res.header('x-auth', token).send(user);
+//             })
+// You can flatten out the structure:
+
+// user.save()
+//     .then(() => {
+//         return user.generateAuthToken()
+//     })
+//     .then((token) => {
+//         res.header('x-auth', token).send(user);
+//     })
+// And it reads as a simple series of steps. One of the main benefits of Promises is to avoid that pyramid structure that flows off to the right like that which is really hard to read and debug.
 
 
 
