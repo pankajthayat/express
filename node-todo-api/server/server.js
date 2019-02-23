@@ -91,6 +91,44 @@ app.patch('./todos/:id',(req,res)=>{
 
 
 
+
+
+app.post("/users",(req,res)=>{
+    var body=_.pick(req.body,['email','password']);
+    var user=new User(body);
+
+    console.log("body----- :------ ",body);
+
+    user.save().then(()=>{
+        return user.generateAuthToken(); // returning it just like in user model.. for chaining promise.. an tag a antother then call
+        //res.send(user);
+
+
+    }).then((token)=>{
+        res.header("x-auth",token).send(user) // x-auth for custorm header... when we prefix a header it means it is a custom header
+    }).catch((e)=>{// this then call is because we return a value fron above then call
+        console.log("error : ",console.error());
+        res.status(400).send(e);
+    })
+})
+
+const jwt =require('jsonwebtoken');
+
+var data={
+    id:10
+};
+
+var token=jwt.sign(data,'123abc'); //1st obj..2nd secret
+
+
+app.get("/jwt",(req,res)=>{
+res.send(token);
+})
+
+
+
+
+
  app.listen(port,()=>{
      console.log(`started on port ${3000}`);
  })
