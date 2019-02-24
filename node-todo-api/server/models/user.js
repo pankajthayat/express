@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 const validator=require('validator');
 const jwt=require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt=require('bcryptjs')
 
 var UserSchema=new mongoose.Schema({
     email: {
@@ -73,6 +74,44 @@ UserSchema.methods.generateAuthToken=function (){
   // we will evntually move this secret value somewhere else
 
 }
+
+UserSchema.statics.findByToken=function(token){
+var User=this;
+var decoded;
+
+try{
+  console.log("decoding....");
+  decoded=jwt.verify(token,'abc123');
+  console.log("decoded : ", decoded);
+} catch(e){
+  // return new Promise((resolve,reject)=>{
+  //   reject();
+  // })
+  return Promise.reject();// same as above..short
+}
+  return User.findOne({
+    '_id': decoded._id,// we can leave id without '' also 
+    'tokens.token':token, // nested document passed in ''
+    'tokens.access':'auth'
+  })
+
+}
+
+UserSchema.pre('save',function (next){
+  var user=this;
+// if is for checking if the pass is modified..otherwise it will run on every save operation..and slow down ,creash our app
+  if(user.isModified('password')){
+    bcrypt.genSalt(10,(err,salt)=>{
+      bcrypt.hash(user.password, salt,(err,hash)=>{
+          user.password=hash;
+          next();
+      })
+  })
+  }else{
+    next();
+  }
+})
+
 
 // we cannot stick method to user model so we are generating User Schema..it is identical to user model
 // pass the schema in mongoose.model..this will not change the functionality of our app

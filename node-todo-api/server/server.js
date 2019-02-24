@@ -6,6 +6,8 @@ var { mongoose } = require('./db/mongoose');
 var { Todo } = require('./models/todo');
 var { User } = require('./models/user');
 
+var {authenticate}=require("./middleware/authenicate")
+
 var app = express();
 
 const port=process.env.PORT||3000;
@@ -105,6 +107,7 @@ app.post("/users",(req,res)=>{
 
 
     }).then((token)=>{
+        // in header..pass key and values
         res.header("x-auth",token).send(user) // x-auth for custorm header... when we prefix a header it means it is a custom header
     }).catch((e)=>{// this then call is because we return a value fron above then call
         console.log("error : ",console.error());
@@ -118,12 +121,36 @@ var data={
     id:10
 };
 
-var token=jwt.sign(data,'123abc'); //1st obj..2nd secret
+var token=jwt.sign(data,'abc123'); //1st obj..2nd secret
 
 
 app.get("/jwt",(req,res)=>{
 res.send(token);
 })
+
+
+
+
+
+app.get('/users/me',authenticate,(req,res)=>{
+   res.send(req.user);
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
