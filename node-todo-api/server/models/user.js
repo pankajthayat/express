@@ -75,6 +75,18 @@ UserSchema.methods.generateAuthToken=function (){
 
 }
 
+UserSchema.methods.removeToken= function (token) {
+  var user=this;
+ return user.update({
+    $pull:{
+      tokens:{
+        token:token
+      }
+    }
+  });
+};
+// $pull is for removeing the property that matches... it is mongoose fn
+// not just the token but it will remove the entire obj
 UserSchema.statics.findByToken=function(token){
 var User=this;
 var decoded;
@@ -97,6 +109,31 @@ try{
 
 }
 
+
+UserSchema.statics.findByCredentials=function (email,password) {
+  var User=this;
+
+  return User.findOne({email}).then((user)=>{
+    if(!user){
+      return Promise.reject();
+    }
+// bcrypt only support callbacks..we can use that but as we have used propmises in our whole app so will keep using promise by returning new.... 
+    return new Promise((resolve,reject)=>{
+      bcrypt.compare(password,user.password,(err,res)=>{
+        if(res){
+          resolve(user);
+        }else{
+          return reject();
+        }
+        
+      })
+    })
+
+  })
+};
+
+
+
 UserSchema.pre('save',function (next){
   var user=this;
 // if is for checking if the pass is modified..otherwise it will run on every save operation..and slow down ,creash our app
@@ -113,12 +150,62 @@ UserSchema.pre('save',function (next){
 })
 
 
+
+
+
+
+
+
+
+
 // we cannot stick method to user model so we are generating User Schema..it is identical to user model
 // pass the schema in mongoose.model..this will not change the functionality of our app
 
 var User = mongoose.model('User', UserSchema);
 
 module.exports = {User}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
